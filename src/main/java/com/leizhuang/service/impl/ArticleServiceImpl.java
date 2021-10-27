@@ -3,6 +3,7 @@ package com.leizhuang.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 
+import com.leizhuang.dao.dos.Archives;
 import com.leizhuang.dao.mapper.ArticleMapper;
 import com.leizhuang.dao.pojo.Article;
 import com.leizhuang.service.ArticleService;
@@ -11,6 +12,7 @@ import com.leizhuang.service.TagService;
 import com.leizhuang.vo.ArticleVo;
 import com.leizhuang.vo.Result;
 import com.leizhuang.vo.params.PageParams;
+import com.sun.org.apache.regexp.internal.RE;
 import org.joda.time.DateTime;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +35,13 @@ public class ArticleServiceImpl implements ArticleService {
     private TagService tagService;
     @Autowired
     private SysUserService sysUserService;
+
+    @Override
+    public Result listArchives() {
+        List<Archives> archivesList=articleMapper.listArchives();
+        return Result.success(archivesList);
+    }
+
     @Override
     public Result listArticle(PageParams pageParams) {
         /**
@@ -51,24 +60,58 @@ public class ArticleServiceImpl implements ArticleService {
         List<Article> records = articlePage.getRecords();
 
         //不能直接返回
-        List<ArticleVo> articleVoList = copyList(records,true,true);
+        List<ArticleVo> articleVoList = copyList(records, true, true);
 
         return Result.success(articleVoList);
 
     }
-    private List<ArticleVo> copyList(List<Article> records,boolean isTag,boolean isAuthor) {
+//最热文章
+    @Override
+    public Result hotArticle(int limit) {
+
+        LambdaQueryWrapper<Article> queryWrapper = new LambdaQueryWrapper<>();
+
+        queryWrapper.orderByDesc(Article::getViewCounts);
+
+        queryWrapper.select(Article::getId, Article::getTitle);
+
+        queryWrapper.last("limit "+limit);
+
+//        select id,title from article order by view_counts desc limit 5
+
+        List<Article> articles = articleMapper.selectList(queryWrapper);
+        return Result.success(copyList(articles,false,false));
+    }
+
+    @Override
+    public Result NewArticles(int limit) {
+        LambdaQueryWrapper<Article> queryWrapper = new LambdaQueryWrapper<>();
+
+        queryWrapper.orderByDesc(Article::getCreateDate);
+
+        queryWrapper.select(Article::getId, Article::getTitle);
+
+        queryWrapper.last("limit "+limit);
+
+//        select id,title from article order by create_date desc limit 5
+
+        List<Article> articles = articleMapper.selectList(queryWrapper);
+        return Result.success(copyList(articles,false,false));
+    }
+
+    private List<ArticleVo> copyList(List<Article> records, boolean isTag, boolean isAuthor) {
 
         List<ArticleVo> articleVoList = new ArrayList<>();
 
         for (Article record : records) {
 
-            articleVoList.add(copy(record,isTag,isAuthor));
+            articleVoList.add(copy(record, isTag, isAuthor));
         }
 
         return articleVoList;
     }
 
-    private ArticleVo copy(Article article,boolean isTag,boolean isAuthor) {
+    private ArticleVo copy(Article article, boolean isTag, boolean isAuthor) {
 
         ArticleVo articleVo = new ArticleVo();
 
@@ -76,12 +119,12 @@ public class ArticleServiceImpl implements ArticleService {
 
         articleVo.setCreateDate(new DateTime(article.getCreateDate()).toString("yyyy-MM-dd HH:mm"));
 //并不是所有的接口，都需要标签，作者信息
-        if (isTag){
+        if (isTag) {
             Long articleId = article.getId();
             articleVo.setTags(tagService.findTagsByArticleId(articleId));
         }
 
-        if (isAuthor){
+        if (isAuthor) {
             Long authorId = article.getAuthorId();
             articleVo.setAuthor(sysUserService.findUserById(authorId).getNickname());
         }

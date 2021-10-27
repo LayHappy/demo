@@ -19,11 +19,42 @@ import org.springframework.web.bind.annotation.RestController;
 public class ArticleController {
 
     @Autowired
-private  ArticleService articleService;
+    private ArticleService articleService;
 
-//    首页文章列表
+    //    首页文章列表
     @PostMapping
     public Result listArticle(@RequestBody PageParams pageParams) {
+
         return articleService.listArticle(pageParams);
+    }
+
+    /**
+     * 首页 最热文章
+     *
+     * @return
+     */
+    @PostMapping("hot")
+    public Result HotArticle() {
+        int limit = 5;
+
+        return articleService.hotArticle(limit);
+    }
+
+    /**
+     * 首页 最新文章
+     * @return
+     */
+    @PostMapping("new")
+    public Result NewArticles() {
+        int limit = 5;
+
+        return articleService.NewArticles(limit);
+    }
+
+    @PostMapping("listArchives")
+    public Result listArchives() {
+        int limit = 5;
+
+        return articleService.listArchives();
     }
 }
