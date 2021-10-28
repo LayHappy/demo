@@ -2,8 +2,10 @@ package com.leizhuang.service;
 
 import com.leizhuang.dao.pojo.SysUser;
 import com.leizhuang.vo.Result;
+import com.leizhuang.vo.UserVo;
 
 public interface SysUserService {
+    UserVo findUserVoById(Long id);
     SysUser findUserById(Long id);
 
     SysUser findUser(String account, String password);
@@ -13,4 +15,5 @@ public interface SysUserService {
     SysUser findUserByAccount(String account);
 //注册用户
     void save(SysUser sysUser);
+
 }
