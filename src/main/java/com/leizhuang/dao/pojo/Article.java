@@ -1,12 +1,14 @@
 package com.leizhuang.dao.pojo;
 
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author LeiZhuang
  * @date 2021/10/25 15:53
  */
 @Data
+
 public class Article {
     public static final int Article_TOP = 1;
     public static final int Article_Common = 0;
