@@ -60,6 +60,24 @@ private LoginService loginService;
     }
 
     @Override
+    public SysUser findUserByAccount(String account) {
+        LambdaQueryWrapper<SysUser> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(SysUser::getAccount,account);
+        queryWrapper.last("limit 1");
+        return this.sysUserMapper.selectOne(queryWrapper);
+
+    }
+
+    @Override
+    public void save(SysUser sysUser) {
+        //保存用户这，id会自动生成
+        //这个地方默认生成的id是分布式id，雪花算法
+        //mybatis-plus
+this.sysUserMapper.insert(sysUser);
+
+    }
+
+    @Override
     public SysUser findUserById(Long id) {
         SysUser sysUser = sysUserMapper.selectById(id);
 
