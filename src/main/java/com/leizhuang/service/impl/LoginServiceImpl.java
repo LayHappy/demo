@@ -42,7 +42,7 @@ public class LoginServiceImpl implements LoginService {
         String userJson = redisTemplate.opsForValue().get("TOKEN_" + token);
         if (StringUtils.isBlank(userJson)) {
             return null;
-        }
+        } 
         SysUser sysUser = JSON.parseObject(userJson, SysUser.class);
         return sysUser;
     }
