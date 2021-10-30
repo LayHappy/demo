@@ -3,11 +3,14 @@ package com.leizhuang.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.leizhuang.dao.mapper.CommentMapper;
 import com.leizhuang.dao.pojo.Comment;
+import com.leizhuang.dao.pojo.SysUser;
 import com.leizhuang.service.CommentsService;
 import com.leizhuang.service.SysUserService;
+import com.leizhuang.util.UserThreadLocal;
 import com.leizhuang.vo.CommentVo;
 import com.leizhuang.vo.Result;
 import com.leizhuang.vo.UserVo;
+import com.leizhuang.vo.params.CommentParam;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -65,13 +68,13 @@ public class CommentsServiceImpl implements CommentsService {
         commentVo.setAuthor(userVo);
 //        子评论
         Integer level = comment.getLevel();
-        if (1==level){
+        if (1 == level) {
             Long id = comment.getId();
-            List<CommentVo> commentVoList=findCommentsByParentId(id);
+            List<CommentVo> commentVoList = findCommentsByParentId(id);
             commentVo.setChildrens(commentVoList);
         }
 //        to User 给谁评论
-        if (level>1){
+        if (level > 1) {
             Long toUid = comment.getToUid();
             UserVo toUserVo = this.sysUserService.findUserVoById(toUid);
             commentVo.setToUser(toUserVo);
@@ -80,9 +83,45 @@ public class CommentsServiceImpl implements CommentsService {
     }
 
     private List<CommentVo> findCommentsByParentId(Long id) {
-        LambdaQueryWrapper<Comment> queryWrapper=new LambdaQueryWrapper<>();
-        queryWrapper.eq(Comment::getParentId,id);
-        queryWrapper.eq(Comment::getLevel,2);
+        LambdaQueryWrapper<Comment> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Comment::getParentId, id);
+        queryWrapper.eq(Comment::getLevel, 2);
         return copyList(commentMapper.selectList(queryWrapper));
+    }
+
+    @Override
+    public Result comment(CommentParam commentParam) {
+
+        SysUser sysUser = UserThreadLocal.get();
+
+        Comment comment = new Comment();
+
+        comment.setArticleId(commentParam.getArticleId());
+
+        comment.setAuthorId(sysUser.getId());
+
+        comment.setContent(commentParam.getContent());
+
+        comment.setCreateDate(System.currentTimeMillis());
+
+        Long parent = commentParam.getParent();
+
+        if (parent == null || parent == 0) {
+
+            comment.setLevel(1);
+
+        } else
+
+            comment.setLevel(2);
+
+        comment.setParentId(parent == null ? 0 : parent);
+
+        Long toUserId = commentParam.getToUserId();
+
+        comment.setToUid(toUserId == null ? 0 : toUserId);
+
+        this.commentMapper.insert(comment);
+        http://localhost:8080/#/view/1405916999732707330
+        return Result.success(null);
     }
 }

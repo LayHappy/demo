@@ -54,7 +54,7 @@ public class ArticleServiceImpl implements ArticleService {
 //        查看完文章之后，本应该直接返回数据了，这时候做了一个更新操作，更新是加写锁的，阻塞其他的读操作，性能就会比较低
 //        更新 增加了此次接口的 耗时，如果一旦更新出问题，不能影响查看文章的操作
 //        线程池 可以把更新操作扔到线程池中去执行，和主线程就不相关了
-threadService.updateArticleViewCount(articleMapper,article);
+        threadService.updateArticleViewCount(articleMapper, article);
         return Result.success(articleVo);
     }
 

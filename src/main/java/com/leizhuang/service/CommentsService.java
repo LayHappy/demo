@@ -1,6 +1,7 @@
 package com.leizhuang.service;
 
 import com.leizhuang.vo.Result;
+import com.leizhuang.vo.params.CommentParam;
 
 public interface CommentsService {
     /**
@@ -9,4 +10,6 @@ public interface CommentsService {
      * @return
      */
      Result commentsByArticleId(Long id);
+
+    Result comment(CommentParam commentParam);
 }
