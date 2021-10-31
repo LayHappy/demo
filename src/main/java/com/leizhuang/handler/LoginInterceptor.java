@@ -49,7 +49,7 @@ public class LoginInterceptor implements HandlerInterceptor {
         String requestURI=request.getRequestURI();
         log.info("request uri:{}",requestURI);
         log.info("request method:{}",request.getMethod());
-        log.info("token :{}",token);
+        log.info("token:{}",token);
         log.info("=====================request end====================");
 
         if (StringUtils.isBlank(token)) {

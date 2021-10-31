@@ -26,7 +26,7 @@ public class CommentsController {
     public Result comments(@PathVariable("id") Long id) {
         return commentsService.commentsByArticleId(id);
     }
-    @PostMapping("/create/change")
+    @PostMapping("create/change")
     public Result comment(@RequestBody CommentParam commentParam){
         return commentsService.comment(commentParam);
     }

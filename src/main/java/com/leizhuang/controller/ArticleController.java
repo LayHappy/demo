@@ -23,13 +23,6 @@ import java.util.Arrays;
 @RestController
 @RequestMapping("articles")
 public class ArticleController {
-    public static Connection conn;
-    public static final String url = "jdbc:mysql://localhost:3306/sqzy?serverTimezone"
-            + "=UTC&useUnicode=true&characterEncoding=utf8&useSSL=false";
-    public static final String name = "com.mysql.cj.jdbc.Driver";
-    public static final String user = "root";
-    public static final String password = "0000";
-
     @Autowired
     private ArticleService articleService;
 
@@ -65,43 +58,20 @@ public class ArticleController {
 
     @PostMapping("listArchives")
     public Result listArchives() {
-        int limit = 5;
-
         return articleService.listArchives();
     }
+
+
     @PostMapping("view/{id}")
     public Result findArticleById(@PathVariable("id") Long articleId){
         return articleService.findArticleById(articleId);
     }
 
-    public String test(String sid){
-        String arr[]={"1","2","3","4","5"};
-        int[] array = Arrays.stream(arr).mapToInt(Integer::parseInt).toArray();
-
-        for (int i : array) {
-            i=i*2;
-            System.out.print(i );
-        }
-      String string=String.valueOf(arr);;
-        return string;
-    }
 
 
 
-    public Connection getConnection() {  //建立返回值为Connection的方法
-        try {        //加载数据库驱动类
-            Class.forName(name);
-        }catch(ClassNotFoundException e){
-            e.printStackTrace();
-        }
-        try {
-            conn= DriverManager.getConnection(url,user,password);//通过访问数据库的URL获取数据库连接对象
-            System.out.println(conn);
-        }catch(SQLException e) {
-            e.printStackTrace();
-        }
-        return conn;//按方法要求返回一个Connection对象
-    }
+
+
     }
 
 

@@ -9,6 +9,7 @@ public interface CommentsService {
      * @param id
      * @return
      */
+
      Result commentsByArticleId(Long id);
 
     Result comment(CommentParam commentParam);

@@ -121,7 +121,7 @@ public class CommentsServiceImpl implements CommentsService {
         comment.setToUid(toUserId == null ? 0 : toUserId);
 
         this.commentMapper.insert(comment);
-        http://localhost:8080/#/view/1405916999732707330
+//        http://localhost:8080/#/view/1405916999732707330?
         return Result.success(null);
     }
 }
