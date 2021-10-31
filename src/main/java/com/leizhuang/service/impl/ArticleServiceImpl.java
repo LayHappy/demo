@@ -1,6 +1,7 @@
 package com.leizhuang.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 
 import com.leizhuang.dao.dos.Archives;
@@ -47,6 +48,20 @@ public class ArticleServiceImpl implements ArticleService {
     private ThreadService threadService;
     @Autowired
     private ArticleTagMapper articleTagMapper;
+
+
+    @Override
+    public Result listArticle(PageParams pageParams) {
+        Page<Article> page = new Page<>(pageParams.getPage(), pageParams.getPageSize());
+        IPage<Article> articleIPage = articleMapper.listArticle(page,
+                pageParams.getCategoryId(),
+                pageParams.getTagId(),
+                pageParams.getYear(),
+                pageParams.getMonth());
+
+        List<Article> records = articleIPage.getRecords();
+        return Result.success(copyList(records,true,true));
+    }
 
     @Override
     public Result findArticleById(Long articleId) {
@@ -109,7 +124,7 @@ public class ArticleServiceImpl implements ArticleService {
 
         articleMapper.updateById(article);
         HashMap<String, String> map = new HashMap<>();
-        map.put("id",article.getId().toString());
+        map.put("id", article.getId().toString());
         return Result.success(map);
     }
 
@@ -119,14 +134,37 @@ public class ArticleServiceImpl implements ArticleService {
         return Result.success(archivesList);
     }
 
-    @Override
+  /*  @Override
     public Result listArticle(PageParams pageParams) {
-        /**
-         * 分页插叙你article数据库表
-         */
+        */
+
+    /**
+     * 分页插叙你article数据库表
+     *//*
         Page<Article> page = new Page<>(pageParams.getPage(), pageParams.getPageSize());
 
         LambdaQueryWrapper<Article> queryWrapper = new LambdaQueryWrapper<>();
+        if (pageParams.getCategoryId() != null) {
+            //and category_id=#{categoryId}
+            queryWrapper.eq(Article::getCategoryId,pageParams.getCategoryId());
+        }
+        List<Long> articleIdList=new ArrayList<>();
+        if (pageParams.getTagId() != null) {
+            //加入标签，条件查询
+//            article并没有trg字段，一篇文章有多个标签，
+//            article_tag，article_id  1： N tag_id
+            LambdaQueryWrapper<ArticleTag> articleTagLambdaQueryWrapper = new LambdaQueryWrapper<>();
+            articleTagLambdaQueryWrapper.eq(ArticleTag::getTagId,pageParams.getTagId());
+            List<ArticleTag> articleTags = articleTagMapper.selectList(articleTagLambdaQueryWrapper);
+            for (ArticleTag articleTag : articleTags) {
+                articleIdList.add(articleTag.getArticleId());
+            }
+            if (articleIdList.size() > 0) {
+//                and id in ()
+                queryWrapper.in(Article::getId,articleIdList);
+            }
+
+        }
 //        是否置顶进行排序
 
         //order by create_data desc
@@ -141,7 +179,7 @@ public class ArticleServiceImpl implements ArticleService {
 
         return Result.success(articleVoList);
 
-    }
+    }*/
 
     //最热文章
     @Override

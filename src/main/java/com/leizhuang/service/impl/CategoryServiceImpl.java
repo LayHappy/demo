@@ -23,11 +23,30 @@ public class CategoryServiceImpl implements CategoryService {
     private CategoryMapper categoryMapper;
 
     @Override
+    public Result categoryDetailById(Long id) {
+        Category category = categoryMapper.selectById(id);
+
+        return Result.success(copy(category));
+    }
+
+    @Override
+    public Result findAllDetail() {
+        LambdaQueryWrapper<Category> queryWrapper = new LambdaQueryWrapper<>();
+
+
+        List<Category> categories = categoryMapper.selectList(queryWrapper);
+
+//       页面交互的对象
+
+        return Result.success(copyList(categories));
+    }
+
+    @Override
     public CategoryVo findCategoryById(Long categoryId) {
         Category category = categoryMapper.selectById(categoryId);
-        CategoryVo categoryVo =new CategoryVo();
+        CategoryVo categoryVo = new CategoryVo();
 //        if (category != null) {
-            BeanUtils.copyProperties(category,categoryVo);
+        BeanUtils.copyProperties(category, categoryVo);
 //        }
 
         return categoryVo;
@@ -35,14 +54,19 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Result findAll() {
+        LambdaQueryWrapper<Category> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.select(Category::getId, Category::getCategoryName);
+
 
         List<Category> categories = categoryMapper.selectList(new LambdaQueryWrapper<>());
+
+
 //       页面交互的对象
 
         return Result.success(copyList(categories));
     }
 
-    private List<CategoryVo>  copyList(List<Category> categoryList) {
+    private List<CategoryVo> copyList(List<Category> categoryList) {
         List<CategoryVo> categoryVoList = new ArrayList<>();
         for (Category category : categoryList) {
             categoryVoList.add(copy(category));
@@ -51,8 +75,8 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     private CategoryVo copy(Category category) {
-        CategoryVo categoryVo=new CategoryVo();
-        BeanUtils.copyProperties(category,categoryVo);
+        CategoryVo categoryVo = new CategoryVo();
+        BeanUtils.copyProperties(category, categoryVo);
         return categoryVo;
     }
 }

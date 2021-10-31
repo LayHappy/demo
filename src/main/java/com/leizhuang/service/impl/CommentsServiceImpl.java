@@ -110,9 +110,9 @@ public class CommentsServiceImpl implements CommentsService {
 
             comment.setLevel(1);
 
-        } else
-
+        } else{
             comment.setLevel(2);
+        }
 
         comment.setParentId(parent == null ? 0 : parent);
 
