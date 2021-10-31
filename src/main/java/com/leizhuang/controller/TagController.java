@@ -23,4 +23,10 @@ public class TagController {
         int limit = 6;
         return tagService.hots(limit);
     }
+
+    @GetMapping()
+    public Result findAll() {
+
+        return tagService.findAll( );
+    }
 }

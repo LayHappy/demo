@@ -1,6 +1,7 @@
 package com.leizhuang.service;
 
 import com.leizhuang.vo.Result;
+import com.leizhuang.vo.params.ArticleParam;
 import com.leizhuang.vo.params.PageParams;
 
 
@@ -38,4 +39,10 @@ public interface ArticleService {
      * @return
      */
     Result findArticleById(Long articleId);
+    /**
+     * 文章发布
+     * @param articleParam
+     * @return
+     */
+    Result publish(ArticleParam articleParam);
 }

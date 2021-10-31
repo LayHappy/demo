@@ -1,7 +1,9 @@
 package com.leizhuang.controller;
 
+import com.leizhuang.common.aop.LogAnnotation;
 import com.leizhuang.service.ArticleService;
 import com.leizhuang.vo.Result;
+import com.leizhuang.vo.params.ArticleParam;
 import com.leizhuang.vo.params.PageParams;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -28,6 +30,7 @@ public class ArticleController {
 
     //    首页文章列表
     @PostMapping
+    @LogAnnotation(module = "文章",operator = "获取文章列表")
     public Result listArticle(@RequestBody PageParams pageParams) {
 
         return articleService.listArticle(pageParams);
@@ -67,7 +70,10 @@ public class ArticleController {
         return articleService.findArticleById(articleId);
     }
 
-
+@PostMapping("publish")
+    public Result publish(@RequestBody ArticleParam articleParam){
+        return articleService.publish(articleParam);
+}
 
 
 
