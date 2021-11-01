@@ -140,7 +140,8 @@ public class ArticleServiceImpl implements ArticleService {
 
     /**
      * 分页插叙你article数据库表
-     *//*
+     */
+    /*
         Page<Article> page = new Page<>(pageParams.getPage(), pageParams.getPageSize());
 
         LambdaQueryWrapper<Article> queryWrapper = new LambdaQueryWrapper<>();
