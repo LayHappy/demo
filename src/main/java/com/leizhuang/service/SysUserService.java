@@ -17,3 +17,9 @@ public interface SysUserService {
     void save(SysUser sysUser);
 
 }
+  /*
+        ┌─────┐
+        |  sysUserServiceImpl (field private com.leizhuang.service.LoginService com.leizhuang.service.impl.SysUserServiceImpl.loginService)
+        ↑     ↓
+        |  loginServiceImpl (field private com.leizhuang.service.SysUserService com.leizhuang.service.impl.LoginServiceImpl.sysUserService)
+        └─────┘*/

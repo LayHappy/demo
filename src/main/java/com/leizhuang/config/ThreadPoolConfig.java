@@ -7,6 +7,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import java.util.concurrent.Executor;
 import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.atomic.AtomicStampedReference;
 
 /**
  * @author LeiZhuang
@@ -15,6 +16,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 @Configuration
 @EnableAsync//开启多线程
 public class ThreadPoolConfig {
+
     @Bean("taskExecutor")
     public Executor asyncServiceExecutor(){
         ThreadPoolTaskExecutor executor=new ThreadPoolTaskExecutor() ;
@@ -33,5 +35,6 @@ public class ThreadPoolConfig {
 //        执行初始化
         executor.initialize();
         return executor;
+
     }
 }
